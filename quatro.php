@@ -24,7 +24,7 @@
 <body>
 <?php
 // Each letter is its own instance on its own line
-$name = "STEVENKANE PABELONA"; 
+$name = "STEVEN"; 
 $letters = str_split($name);
 foreach ($letters as $index => $ch) {
     if ($ch !== " ") { 
