@@ -17,7 +17,7 @@
       color: black; 
       letter-spacing: 20px; /* more spacing */
       transform-origin: center;
-      transition: transform 0.15s ease;
+      transition: transform 0.2s ease;
     }
   </style>
 </head>
@@ -46,11 +46,11 @@ foreach ($letters as $index => $ch) {
       const zOffset = Math.sin(offsetAngle) * radius;
 
       // Each letter has its own vertical position
-      let topPos = parseFloat(letter.dataset.top || window.innerHeight) - 4; // faster upward speed
-      if (topPos < -100) {
+      let topPos = parseFloat(letter.dataset.top || window.innerHeight) - 2; // slower upward speed
+      if (topPos < -120) {
         topPos = window.innerHeight; // reset this letter individually
       }
-      letter.dataset.top = topPos; // store position
+      letter.dataset.top = topPos;
 
       const leftPos = (window.innerWidth / 2 + xOffset);
 
@@ -63,13 +63,13 @@ foreach ($letters as $index => $ch) {
 
       // Tilt when reaching left or right extremes
       if (xOffset > radius * 0.7) {
-        letter.style.transform += " rotateY(20deg)";
+        letter.style.transform += " rotateY(15deg)";
       } else if (xOffset < -radius * 0.7) {
-        letter.style.transform += " rotateY(-20deg)";
+        letter.style.transform += " rotateY(-15deg)";
       }
     });
 
-    angle += 0.15; // rotation speed
+    angle += 0.07; // slower rotation
     requestAnimationFrame(animate);
   }
 
