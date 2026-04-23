@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>4.0 Tasker Spiral</title>
+  <title>4.0 Tasker Spiral Loop</title>
   <style>
     body {
       background-color: white; 
@@ -12,24 +12,22 @@
     }
     .letter {
       position: absolute; 
-      font-size: 24px;   /* smaller, less bold */
+      font-size: 24px;   /* less bold */
       font-weight: normal; 
       color: black; 
-      letter-spacing: 20px; /* more spacing between letters */
+      letter-spacing: 20px; /* more spacing */
       transform-origin: center;
-      transition: transform 0.15s ease; /* smooth tilt/scale */
+      transition: transform 0.15s ease;
     }
   </style>
 </head>
 <body>
 <?php
-// Each letter is its own instance
 $name = "STEVENKANE PABELONA"; 
 $letters = str_split($name);
 foreach ($letters as $index => $ch) {
     if ($ch !== " ") { 
-        // give each letter its own ID so we can animate individually
-        echo "<span class='letter' id='letter$index'>$ch</span>";
+        echo "<span class='letter' data-index='$index'>$ch</span>";
     }
 }
 ?>
@@ -37,45 +35,48 @@ foreach ($letters as $index => $ch) {
 <script>
   const letters = document.querySelectorAll(".letter");
   let angle = 0;
-  let y = window.innerHeight;
 
   function animate() {
-    y -= 5; // faster upward speed
-    if (y < -1000) {
-      y = window.innerHeight; // reset to bottom
-    }
-
     letters.forEach((letter, index) => {
-      // Each letter spirals independently
       const offsetAngle = angle + index * 0.8; 
-      const radius = 180; // distance from pole
+      const radius = 180;
 
       // Spiral coordinates
       const xOffset = Math.cos(offsetAngle) * radius;
       const zOffset = Math.sin(offsetAngle) * radius;
 
-      // Position each letter independently in spiral
-      const topPos = (y - index * 50);
+      // Each letter has its own vertical position
+      let topPos = parseFloat(letter.dataset.top || window.innerHeight) - 4; // faster upward speed
+      if (topPos < -100) {
+        topPos = window.innerHeight; // reset this letter individually
+      }
+      letter.dataset.top = topPos; // store position
+
       const leftPos = (window.innerWidth / 2 + xOffset);
 
       letter.style.top = topPos + "px"; 
       letter.style.left = leftPos + "px";
 
-      // Depth illusion: subtle scaling (closer = bigger, farther = smaller)
+      // Depth illusion: subtle scaling
       const scale = 0.9 + (zOffset / radius) * 0.1; 
       letter.style.transform = `scale(${scale})`;
 
       // Tilt when reaching left or right extremes
       if (xOffset > radius * 0.7) {
-        letter.style.transform += " rotateY(20deg)"; // tilt right
+        letter.style.transform += " rotateY(20deg)";
       } else if (xOffset < -radius * 0.7) {
-        letter.style.transform += " rotateY(-20deg)"; // tilt left
+        letter.style.transform += " rotateY(-20deg)";
       }
     });
 
-    angle += 0.15; // faster rotation
+    angle += 0.15; // rotation speed
     requestAnimationFrame(animate);
   }
+
+  // Initialize each letter’s starting vertical position
+  letters.forEach((letter, index) => {
+    letter.dataset.top = window.innerHeight - index * 50;
+  });
 
   animate();
 </script>
