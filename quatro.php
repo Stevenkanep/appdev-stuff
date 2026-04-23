@@ -15,16 +15,15 @@
       font-size: 24px;   /* clean, less bold */
       font-weight: normal; 
       color: black; 
-      letter-spacing: 22px; /* more spacing between letters */
+      letter-spacing: 22px; /* spacing between letters */
       transform-origin: center;
-      transition: transform 0.2s ease;
+      transition: transform 0.25s ease; /* smooth flip/tilt */
     }
   </style>
 </head>
 <body>
 <?php
-// Each letter is its own instance on its own line
-$name = "STEVEN"; 
+$name = "STEVENKANE PABELONA"; 
 $letters = str_split($name);
 foreach ($letters as $index => $ch) {
     if ($ch !== " ") { 
@@ -46,7 +45,7 @@ foreach ($letters as $index => $ch) {
       const xOffset = Math.cos(offsetAngle) * radius;
       const zOffset = Math.sin(offsetAngle) * radius;
 
-      // Each letter has its own vertical position with interval spacing
+      // Each letter has its own vertical position with spacing
       let topPos = parseFloat(letter.dataset.top || (window.innerHeight - index * 60)) - 2.5; 
       if (topPos < -150) {
         topPos = window.innerHeight; // reset this letter individually
@@ -58,14 +57,14 @@ foreach ($letters as $index => $ch) {
       letter.style.top = topPos + "px"; 
       letter.style.left = leftPos + "px";
 
-      // Keep letters straight normally
+      // Base transform: keep letters straight with subtle depth scaling
       let transform = `scale(${0.9 + (zOffset / radius) * 0.1})`;
 
-      // Tilt only when reaching left or right extremes
+      // Flip when reaching left or right extremes
       if (xOffset > radius * 0.7) {
-        transform += " rotateY(20deg)";
+        transform += " rotateY(180deg)"; // flip on right side
       } else if (xOffset < -radius * 0.7) {
-        transform += " rotateY(-20deg)";
+        transform += " rotateY(180deg)"; // flip on left side
       }
 
       letter.style.transform = transform;
