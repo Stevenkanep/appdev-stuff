@@ -12,10 +12,10 @@
     }
     .letter {
       position: absolute; 
-      font-size: 24px;   /* less bold */
+      font-size: 24px;   /* clean, less bold */
       font-weight: normal; 
       color: black; 
-      letter-spacing: 20px; /* more spacing */
+      letter-spacing: 22px; /* more spacing between letters */
       transform-origin: center;
       transition: transform 0.2s ease;
     }
@@ -23,6 +23,7 @@
 </head>
 <body>
 <?php
+// Each letter is its own instance on its own line
 $name = "STEVENKANE PABELONA"; 
 $letters = str_split($name);
 foreach ($letters as $index => $ch) {
@@ -39,15 +40,15 @@ foreach ($letters as $index => $ch) {
   function animate() {
     letters.forEach((letter, index) => {
       const offsetAngle = angle + index * 0.8; 
-      const radius = 180;
+      const radius = 160;
 
       // Spiral coordinates
       const xOffset = Math.cos(offsetAngle) * radius;
       const zOffset = Math.sin(offsetAngle) * radius;
 
-      // Each letter has its own vertical position
-      let topPos = parseFloat(letter.dataset.top || window.innerHeight) - 2; // slower upward speed
-      if (topPos < -120) {
+      // Each letter has its own vertical position with interval spacing
+      let topPos = parseFloat(letter.dataset.top || (window.innerHeight - index * 60)) - 2.5; 
+      if (topPos < -150) {
         topPos = window.innerHeight; // reset this letter individually
       }
       letter.dataset.top = topPos;
@@ -57,25 +58,26 @@ foreach ($letters as $index => $ch) {
       letter.style.top = topPos + "px"; 
       letter.style.left = leftPos + "px";
 
-      // Depth illusion: subtle scaling
-      const scale = 0.9 + (zOffset / radius) * 0.1; 
-      letter.style.transform = `scale(${scale})`;
+      // Keep letters straight normally
+      let transform = `scale(${0.9 + (zOffset / radius) * 0.1})`;
 
-      // Tilt when reaching left or right extremes
+      // Tilt only when reaching left or right extremes
       if (xOffset > radius * 0.7) {
-        letter.style.transform += " rotateY(15deg)";
+        transform += " rotateY(20deg)";
       } else if (xOffset < -radius * 0.7) {
-        letter.style.transform += " rotateY(-15deg)";
+        transform += " rotateY(-20deg)";
       }
+
+      letter.style.transform = transform;
     });
 
-    angle += 0.07; // slower rotation
+    angle += 0.08; // moderate rotation speed
     requestAnimationFrame(animate);
   }
 
-  // Initialize each letter’s starting vertical position
+  // Initialize each letter’s starting vertical position with spacing
   letters.forEach((letter, index) => {
-    letter.dataset.top = window.innerHeight - index * 50;
+    letter.dataset.top = window.innerHeight - index * 60;
   });
 
   animate();
