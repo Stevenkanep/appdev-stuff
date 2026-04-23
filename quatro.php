@@ -15,7 +15,8 @@
       font-size: 32px;
       font-weight: normal; /* no bold */
       color: black; 
-      letter-spacing: 10px; /* extra spacing between letters */
+      letter-spacing: 8px; /* spacing between letters */
+      transform-origin: center; /* allows flipping */
     }
   </style>
 </head>
@@ -36,27 +37,39 @@ foreach ($letters as $ch) {
   let y = window.innerHeight;
 
   function animate() {
-    y -= 2; // drift upward
-    if (y < -200) {
+    y -= 6; // faster upward speed
+    if (y < -400) {
       y = window.innerHeight; // reset to bottom
     }
 
     letters.forEach((letter, index) => {
-      // Spiral math: angle + index offset
-      const offsetAngle = angle + index * 0.5;
-      const radius = 100; // distance from "pole"
+      // Spiral math: helix around a tilted pole
+      const offsetAngle = angle + index * 0.6; 
+      const radius = 120; // distance from pole
 
-      // Spiral coordinates around center
+      // Circular coordinates
       const xOffset = Math.cos(offsetAngle) * radius;
-      const zOffset = Math.sin(offsetAngle) * radius; // gives circular rotation
+      const zOffset = Math.sin(offsetAngle) * radius;
+
+      // Tilt the spiral slightly to the side
+      const tilt = index * 2; 
 
       // Position letters in spiral climbing upward
-      letter.style.top = (y - index * 20) + "px"; 
-      letter.style.left = (window.innerWidth / 2 + xOffset) + "px";
+      const topPos = (y - index * 30);
+      const leftPos = (window.innerWidth / 2 + xOffset + tilt);
 
+      letter.style.top = topPos + "px"; 
+      letter.style.left = leftPos + "px";
+
+      // Flip letters when they reach near the top
+      if (topPos < 100) {
+        letter.style.transform = "rotateY(180deg)";
+      } else {
+        letter.style.transform = "rotateY(0deg)";
+      }
     });
 
-    angle += 0.05; // rotate spiral
+    angle += 0.2; // faster rotation
     requestAnimationFrame(animate);
   }
 
